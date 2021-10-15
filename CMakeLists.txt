@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(CPP_STD 17)
 
-project(pcm_coder)
+project(Misha)
 
 set(MODULES_DIR ${CMAKE_SOURCE_DIR}/cmake)
 

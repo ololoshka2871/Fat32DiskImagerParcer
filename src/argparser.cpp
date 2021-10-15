@@ -3,7 +3,7 @@
 
 #include "argparser.h"
 
-const char Options::uncompresed[] = "rawvideo";
+//const char Options::uncompresed[] = "rawvideo";
 
 static std::string printBool(bool v) { return v ? "YES" : "NO"; }
 
@@ -50,6 +50,7 @@ std::string generate_default_str<bool>(std::string &default_str,
 }
 
 static void configureArgumentParcer(CLI::App &app, Options &options) {
+    /*
   app.add_option("audiofile", options.InputFile, "Audiofile to process.")
       ->expected(1)
       ->required()
@@ -109,11 +110,13 @@ static void configureArgumentParcer(CLI::App &app, Options &options) {
   newOption(app, "--heigth_mod", options.Rpi_heigth_mod, "RPI heigth modifier.")
       ->needs(rpi_mode);
 #endif
+    */
 }
 
 void Options::dump(std::ostream &os) const {
   using namespace std;
 
+  /*
   os << "Encoder options:" << endl << "\tInput file: " << InputFile << endl;
   if (!Play()) {
     os << "\tOutput File: " << OutputFile << endl
@@ -145,10 +148,11 @@ void Options::dump(std::ostream &os) const {
   if (codec != uncompresed) {
     os << "\tVideo bitrate: " << bitrate << endl;
   }
+  */
 }
 
 int parseArguments(int argc, char *argv[], Options &options) {
-  CLI::App app{"PCM encoder"};
+  CLI::App app{"Misha"};
   configureArgumentParcer(app, options);
   CLI11_PARSE(app, argc, argv);
   return 0;
