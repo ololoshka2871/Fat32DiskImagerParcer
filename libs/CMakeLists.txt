@@ -13,3 +13,9 @@ target_include_directories(CLI11 INTERFACE ${CLI11_DIR})
 ##############
 
 add_subdirectory(progress-cpp)
+
+##############
+# mio
+##############
+
+add_subdirectory(mio)

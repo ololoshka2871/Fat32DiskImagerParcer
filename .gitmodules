@@ -4,3 +4,6 @@
 [submodule "libs/progress-cpp"]
 	path = libs/progress-cpp
 	url = https://github.com/prakhar1989/progress-cpp.git
+[submodule "libs/mio"]
+	path = libs/mio
+	url = https://github.com/mandreyel/mio.git

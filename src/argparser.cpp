@@ -3,7 +3,7 @@
 
 #include "argparser.h"
 
-//const char Options::uncompresed[] = "rawvideo";
+// const char Options::uncompresed[] = "rawvideo";
 
 static std::string printBool(bool v) { return v ? "YES" : "NO"; }
 
@@ -50,109 +50,29 @@ std::string generate_default_str<bool>(std::string &default_str,
 }
 
 static void configureArgumentParcer(CLI::App &app, Options &options) {
-    /*
-  app.add_option("audiofile", options.InputFile, "Audiofile to process.")
+  app.add_option("file", options.file, "WAV-file to process.")
       ->expected(1)
       ->required()
       ->check(CLI::ExistingFile);
-  auto output =
-      app.add_option("outputfile", options.OutputFile, "Result video file.")
-          ->expected(1)
-#ifndef PLAYER
-          ->required()
-#endif
-      ;
 
-#ifdef RPI
-  auto rpi_mode =
-      newFlag(app, "-R,--rpi-mode", options.rpiMode, "Raspberry PI mode");
-#endif
-
-  auto codec_opt = newOption(app, "-c,--video-codec", options.codec,
-                             "Video codec to compress result (for FFmpeg).")
-                       ->needs(output);
-
-  newFlag(app, "--pal,!--ntsc", options.pal,
-          "Output video format: PAL/NTSC. (--rpi-mode -> auto)",
-          options.formatsStr())
-#ifdef RPI
-      ->excludes(rpi_mode)
-#endif
-      ;
-
-  newFlag(app, "--14,!--16", options.width14, "Output bit widtht: 14/16 bit.",
-          options.bitWidthsStr());
-  newFlag(app, "--with-dither,!--no-dither,!--ND", options.use_dither,
-          "Use dither when convering 16 bit -> 14 bit.");
-  newFlag(app, "--with-parity,!--no-parity,!--NP", options.parity,
-          "Generate parity.");
-  newFlag(app, "--with-q,!--no-q,!--NQ", options.m_Q, "Generate Q.");
-  newFlag(app, "--copy-protection,--CP,!--no-copy-protection",
-          options.copyProtection, "Set copy protection bit.");
-  newOption(app, "-b,--video-bitrate", options.bitrate,
-            "Set video bitrate (if not uncompressed).")
-      ->needs(output)
-      ->needs(codec_opt);
-  newOption(app, "--crop-top", options.crop_top,
-            "Crop N lines from TOP of frame.");
-  newOption(app, "--crop-bot", options.crop_bot,
-            "Crop N lines from BOTTOM of frame.");
-
-#ifdef RPI
-  newOption(app, "--vsync_delay", options.Rpi_vsync_delay,
-            "RPI vsync delay, in us.")
-      ->needs(rpi_mode);
-  newOption(app, "--left_offset", options.Rpi_left_offset, "RPI left offet.")
-      ->needs(rpi_mode);
-  newOption(app, "--right_offset", options.Rpi_right_offset,
-            "RPI right offset.")
-      ->needs(rpi_mode);
-  newOption(app, "--heigth_mod", options.Rpi_heigth_mod, "RPI heigth modifier.")
-      ->needs(rpi_mode);
-#endif
-    */
+  auto y = newFlag(app, "-y", options.auto_accept,
+                   "Don't ask override Sampling Frequency");
+  newFlag(app, "-q", options.quet, "Be quiet")->needs(y);
+  newOption(app, "--override-to", options.override_to,
+            "Override Sampling Frequency to");
 }
 
 void Options::dump(std::ostream &os) const {
   using namespace std;
 
-  /*
-  os << "Encoder options:" << endl << "\tInput file: " << InputFile << endl;
-  if (!Play()) {
-    os << "\tOutput File: " << OutputFile << endl
-       << "\tCodec: " << codec << endl;
-  } else {
-#ifdef PLAYER
-    os << "\tPlaying mode: " << (rpiMode ? "RaspberryPI" : "Window") << endl;
-#endif
-  }
-
-  os << "\tFormat: "
-#ifdef PLAYER
-     << (rpiMode ? "Auto" : formatsStr())
-#else
-     << formatsStr()
-#endif
-     << endl
-     << "\tBit width: " << bitWidthsStr() << endl
-     << "\tGenerate parity: " << printBool(parity) << endl
-     << "\tAdd copy-protection bit: " << printBool(copyProtection) << endl;
-  if (width14) {
-    os << "\tGenerate Q: " << printBool(generateQ()) << endl;
-  }
-  os << "\tUse dither: " << printBool(width14 ? use_dither : false) << endl;
-
-  if ((crop_top || crop_bot)) {
-    os << "\tCrop video top=" << crop_top << ", bot=" << crop_bot << endl;
-  }
-  if (codec != uncompresed) {
-    os << "\tVideo bitrate: " << bitrate << endl;
-  }
-  */
+  os << "Options:" << endl
+     << "\tInput file: " << file << endl
+     << "\tOverride Sampling Rate to: " << override_to << endl
+     << "\tAuto: " << printBool(auto_accept) << endl;
 }
 
 int parseArguments(int argc, char *argv[], Options &options) {
-  CLI::App app{"Misha"};
+  CLI::App app{"SampleRateModificator"};
   configureArgumentParcer(app, options);
   CLI11_PARSE(app, argc, argv);
   return 0;
