@@ -1,9 +1,6 @@
 [submodule "libs/CLI11"]
 	path = libs/CLI11
 	url = https://github.com/CLIUtils/CLI11.git
-[submodule "libs/progress-cpp"]
-	path = libs/progress-cpp
-	url = https://github.com/prakhar1989/progress-cpp.git
 [submodule "libs/mio"]
 	path = libs/mio
 	url = https://github.com/mandreyel/mio.git
