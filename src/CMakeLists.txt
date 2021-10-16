@@ -12,7 +12,6 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CPP_STD})
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         CLI11
-        progresscpp
         mio::mio
 )
 
@@ -24,8 +23,12 @@ if (NOT WIN32)
     )
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SAFESEH:NO")
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SAFESEH:NO")
 endif()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CPP_STD})

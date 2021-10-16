@@ -9,12 +9,6 @@ add_library(CLI11 INTERFACE)
 target_include_directories(CLI11 INTERFACE ${CLI11_DIR})
 
 ##############
-# progress-cpp
-##############
-
-add_subdirectory(progress-cpp)
-
-##############
 # mio
 ##############
 

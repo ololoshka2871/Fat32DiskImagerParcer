@@ -10,5 +10,3 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${MODULES_DIR})
 
 add_subdirectory(libs)
 add_subdirectory(src)
-
-
