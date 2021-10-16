@@ -81,10 +81,8 @@ int main(int argc, char *argv[]) {
       if (options.auto_accept) {
         std::cout << "Y" << std::endl;
       } else {
-        std::string str;
-        std::cin >> str;
-        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-        if (*str.cbegin() != 'Y') {
+        auto in = std::cin.get();
+        if (!(in == 'y' || in == 'Y')) {
           std::cout << "Canceled." << std::endl;
           return 0;
         }
@@ -104,8 +102,8 @@ int main(int argc, char *argv[]) {
     }
   } else {
     if (!options.quet) {
-      std::cout << "Sampling Rate " << wav_header->sampleRate << " is standart"
-                << std::endl;
+      std::cout << "Sampling Rate " << wav_header->sampleRate
+                << " is standart, skip." << std::endl;
       return 0;
     }
   }
