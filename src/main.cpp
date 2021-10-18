@@ -1,7 +1,5 @@
 #ifdef _MSC_VER
 #include <windows.h>
-#include <vector>
-#include <iostream>
 #else
 #include <csignal>
 #include <sys/ioctl.h>
@@ -10,6 +8,8 @@
 
 #include <algorithm>
 #include <cstring>
+#include <iostream>
+#include <vector>
 
 #include "argparser.h"
 
