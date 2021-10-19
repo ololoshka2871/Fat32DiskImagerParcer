@@ -54,21 +54,12 @@ static void configureArgumentParcer(CLI::App &app, Options &options) {
       ->expected(1)
       ->required()
       ->check(CLI::ExistingFile);
-
-  auto y = newFlag(app, "-y", options.auto_accept,
-                   "Don't ask override Sampling Frequency");
-  newFlag(app, "-q", options.quet, "Be quiet")->needs(y);
-  newOption(app, "--override-to", options.override_to,
-            "Override Sampling Frequency to");
 }
 
 void Options::dump(std::ostream &os) const {
   using namespace std;
 
-  os << "Options:" << endl
-     << "\tInput file: " << file << endl
-     << "\tOverride Sampling Rate to: " << override_to << endl
-     << "\tAuto: " << printBool(auto_accept) << endl;
+  os << "Options:" << endl << "\tInput file: " << file << endl;
 }
 
 int parseArguments(int argc, char *argv[], Options &options) {

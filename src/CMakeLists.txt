@@ -4,7 +4,8 @@ set(SRC
     argparser.cpp
     argparser.h
 
-    WavHeader.h
+    emfat.h
+    emfat1.h
 )
 
 add_executable(${PROJECT_NAME} ${SRC})
@@ -13,6 +14,11 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC
         CLI11
         mio::mio
+)
+
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC
+        -Dregister=
 )
 
 if (NOT WIN32)

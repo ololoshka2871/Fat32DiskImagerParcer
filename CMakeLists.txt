@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(CPP_STD 17)
 
-project(SampleRateModificator)
+project(Fat32DiskImagerParcer)
 
 set(MODULES_DIR ${CMAKE_SOURCE_DIR}/cmake)
 
