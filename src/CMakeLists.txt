@@ -4,6 +4,9 @@ set(SRC
     argparser.cpp
     argparser.h
 
+    str_trim.cpp
+    str_trim.h
+
     emfat.h
     emfat1.h
 )
