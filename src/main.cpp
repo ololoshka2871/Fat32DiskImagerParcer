@@ -190,39 +190,61 @@ static void dump_fat(const mio::mmap_source &cluster_chains, uint32_t offset,
   static constexpr uint32_t END = 0x0fffffff;
   static constexpr uint32_t BROCKEN = 0x0ffffff7;
 
-  os << "FAT at offset 0x" << std::hex << offset << " :" << endl;
-  os << "Reserved: " << dump_bytes((uint8_t *)&cluster_chains[0], 4) << ", "
-     << dump_bytes((uint8_t *)&cluster_chains[4], 4) << ", "
-     << dump_bytes((uint8_t *)&cluster_chains[8], 4) << endl;
+  const auto cluster_chain_base = (uint32_t *)&cluster_chains[0];
 
-  const auto cluster_chain_base = (uint32_t *)&cluster_chains[12];
-
-  auto decode_attr = [](uint8_t attr) -> std::string {
+  auto print_claster_chain =
+      [cluster_chain_base](uint32_t current_claster) -> std::string {
     std::stringstream ss;
-    if (attr & (1 << 5)) {
-      ss << "Archive |";
-    }
-    if (attr & (1 << 4)) {
-      ss << "Dir |";
-    }
-    if (attr & (1 << 3)) {
-      ss << "VolID |";
-    }
-    if (attr & (1 << 2)) {
-      ss << "Sys |";
-    }
-    if (attr & (1 << 1)) {
-      ss << "Hidden |";
-    }
-    if (attr & (1 << 0)) {
-      ss << "| RO";
+    uint32_t next_claster = cluster_chain_base[current_claster];
+    while (true) {
+      if (next_claster == END) {
+        ss << current_claster << " <END>" << endl;
+        break;
+      }
+      if (next_claster == BROCKEN) {
+        ss << current_claster << "<brocken>" << endl;
+        break;
+      }
+
+      ss << current_claster << " -> ";
+
+      current_claster = next_claster;
+      next_claster = cluster_chain_base[next_claster];
     }
     return ss.str();
   };
 
-  auto print_file_info = [&os, decode_attr, &cluster_chains,
-                          cluster_chain_base](auto f, uint32_t offset,
-                                              std::string name) {
+  os << "FAT at offset 0x" << std::hex << offset << " :" << endl;
+  os << "Reserved: " << dump_bytes((uint8_t *)&cluster_chains[0], 4) << ", "
+     << dump_bytes((uint8_t *)&cluster_chains[4], 4) << endl;
+
+  os << "Root dir in clasters: " << print_claster_chain(3) << endl;
+
+  auto decode_attr = [](uint8_t attr) -> std::string {
+    std::stringstream ss;
+    if (attr & (1 << 5)) {
+      ss << "Archive";
+    }
+    if (attr & (1 << 4)) {
+      ss << " | Dir";
+    }
+    if (attr & (1 << 3)) {
+      ss << " | VolID";
+    }
+    if (attr & (1 << 2)) {
+      ss << " | Sys";
+    }
+    if (attr & (1 << 1)) {
+      ss << " | Hidden";
+    }
+    if (attr & (1 << 0)) {
+      ss << " | RO";
+    }
+    return ss.str();
+  };
+
+  auto print_file_info = [&os, decode_attr, &print_claster_chain](
+                             auto f, uint32_t offset, std::string name) {
     if (f->attr == 0x0f) {
       os << "> Long file record at 0x" << std::hex << offset << std::dec
          << ", skip" << endl;
@@ -254,22 +276,7 @@ static void dump_fat(const mio::mmap_source &cluster_chains, uint32_t offset,
         return;
       }
 
-      os << "\t> Claster chain: ";
-      uint32_t cluster = cluster_chain_base[claster];
-      while (true) {
-        if (cluster == END) {
-          os << "<END>" << endl;
-          break;
-        }
-        if (cluster == BROCKEN) {
-          os << "<brocken>" << endl;
-          break;
-        }
-
-        os << dump_bytes(&cluster, 1) << " -> ";
-
-        cluster = cluster_chain_base[cluster];
-      }
+      os << "\t> Claster chain: " << print_claster_chain(claster);
     }
 
     separator(os);
